@@ -23,8 +23,8 @@ interface ResultOptions {
 const defaultOptions = {
   size: 10,
   page: 1,
-  fetch: () => {}
-}
+  fetch: () => {},
+};
 
 const usePageLoadingHook = (options: OptionTypes = defaultOptions): ResultOptions => {
   const [size] = useState(options.size)

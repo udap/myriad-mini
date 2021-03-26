@@ -26,15 +26,20 @@ const defaultProps: MoreLoadingProps = {
   onClick: () => {}
 }
 
+/**
+ * 加载更多
+ * @param props 组件参数 
+ * @returns 
+ */
 const MoreLoading: React.FC<MoreLoadingProps> = (props = defaultProps) => {
   const { status, moreText, loadingText, noMoreText, onClick } = props
   const [baseMoreText, setBaseMoreText] = useState('')
 
-  const handleClick = () => {
-    if (status === 'more') {
-      onClick()
+  const handleClick = (event: CommonEvent) => {
+    if (status === "more") {
+      onClick(event);;
     }
-  }
+  };
 
   const baseClass = classNames('loading-more', {
     'loading-more--disabled': status !== 'more'
@@ -42,16 +47,16 @@ const MoreLoading: React.FC<MoreLoadingProps> = (props = defaultProps) => {
 
   useEffect(() => {
     switch (status) {
-      case 'more':
-        setBaseMoreText(moreText)
-        break
-      case 'loading':
-        setBaseMoreText(loadingText)
-        break
-      case 'noMore':
-        setBaseMoreText(noMoreText)
+      case "more":
+        setBaseMoreText(moreText);
+        break;
+      case "loading":
+        setBaseMoreText(loadingText);
+        break;
+      case "noMore":
+        setBaseMoreText(noMoreText);
     }
-  }, [props.status])
+  }, [status]);
 
   return (
     <View className={baseClass} onClick={handleClick}>
