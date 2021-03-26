@@ -1,37 +1,43 @@
 import React, { ComponentProps } from 'react'
 import { View, Text } from '@tarojs/components'
 
-import './index.less'
 import LazyImage from '../LazyImage'
 import Flex from '../Flex'
 
+import './index.less'
+
 interface ItemGiftProps extends ComponentProps<any> {
-  url: string,
-  title: string,
-  price: number,
+  url: string
+  title: string
+  price: number
   offer: string
 }
 
-const ItemGift: React.FC<ItemGiftProps> = props => {
+const ItemGift: React.FC<ItemGiftProps> = (props) => {
   const { url, title, price, offer, ...restProps } = props
   return (
-    <View {...restProps} className='gift-item'>
-      <Flex direction='column' align='start'>
+    <View {...restProps} className="gift-item">
+      <Flex direction="column" align="start">
         <LazyImage
-          wrapStyle={{ height: '320rpx', width: '100%' }}
-          style={{ height: '220rpx' }}
+          wrapStyle={{ height: '380rpx', width: '100%' }}
+          style={{
+            height: '380rpx',
+            width: '100%',
+            overflow: 'hidden',
+            borderRadius: '10rpx',
+          }}
           url={url}
-          mode='widthFix'
+          mode="aspectFill"
         />
-        <Text className='gift-item__title'>{title}</Text>
-        <Flex justify='start'>
-          <Text>￥{price}</Text>
-          <Text>市场参考价</Text>
+        <Text className="gift-item__title">{title}</Text>
+        <Flex justify="start">
+          <Text className="gift-item__price">￥{price}</Text>
+          <Text className="gift-item__desc">市场参考价</Text>
         </Flex>
-        <View>
-          <Text>由</Text>
-          <Text>{offer}</Text>
-          <Text>提供</Text>
+        <View className="gift-item__footer">
+          <Text className="gift-item__text">由</Text>
+          <Text className="gift-item__offer">{offer}</Text>
+          <Text className="gift-item__text">提供</Text>
         </View>
       </Flex>
     </View>

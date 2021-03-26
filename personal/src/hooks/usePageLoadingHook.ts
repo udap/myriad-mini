@@ -1,51 +1,67 @@
+import { getUserId } from './../utils/storage'
 import { useEffect, useState } from 'react'
-import { showLoading, hideLoading, usePullDownRefresh, stopPullDownRefresh } from '@tarojs/taro'
+import {
+  showLoading,
+  hideLoading,
+  usePullDownRefresh,
+  stopPullDownRefresh,
+} from '@tarojs/taro'
+import { EmptyStatusType } from '../components/Empty'
+import { MoreLoadingStatusType } from '../components/MoreLoading'
 
 interface OptionTypes {
-  size: number,
-  page: number,
-  fetch: Function
+  size?: number
+  page?: number
+  fetch: (data?: any) => Promise<{}>
 }
 
 interface ResultOptions {
-  page: number,
-  size: number,
-  list: any[],
-  status: string,
-  loading: boolean,
-  isEmpty: boolean,
-  emptyType: string,
-  isLoadingMore: boolean,
-  fetchData: Function,
-  onLoadingMoreHandle: Function
+  page: number
+  size: number
+  list: any[]
+  loading: boolean
+  isEmpty: boolean
+  status: keyof MoreLoadingStatusType
+  emptyType: keyof EmptyStatusType
+  isLoadingMore: boolean
+  fetchData: Function
+  onLoadingMoreHandle: () => void
 }
 
-const defaultOptions = {
-  size: 10,
-  page: 1,
-  fetch: () => {},
-};
+const defaultOptions: OptionTypes = {
+  fetch: () => new Promise<{}>((resolve) => resolve({})),
+}
 
-const usePageLoadingHook = (options: OptionTypes = defaultOptions): ResultOptions => {
-  const [size] = useState(options.size)
-  const [page, setPage] = useState(options.page)
+const usePageLoadingHook = (options = defaultOptions): ResultOptions => {
+  const [size] = useState<number>(options.size || 10)
+  const [page, setPage] = useState(options.page || 0)
   const [list, setList] = useState([])
   const [loading, setLoading] = useState(true)
-  const [status, setStatus] = useState('more')
-  const [emptyType, setEmptyType] = useState('notList')
+  const [status, setStatus] = useState<keyof MoreLoadingStatusType>('more')
+  const [emptyType, setEmptyType] = useState<keyof EmptyStatusType>('notList')
   const [isEmpty, setIsEmpty] = useState(false)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
-
+  const userId = getUserId()
   // 加载数据
-  const fetchData = async () => {
+  const fetchData = async (fetchType?: boolean) => {
     setLoading(true)
-    const data = []
     try {
-      const result = await options.fetch()
-      console.log(result)
+      const result: any = await options.fetch({
+        page: fetchType ? page + 1 : 0,
+        size,
+        orgUid: userId,
+      })
+      const content = result.content
       setLoading(false)
-      setStatus(data.length < size ? 'noMore' : 'more')
-      setList(data)
+      setStatus(content.content.length < size ? 'noMore' : 'more')
+      // 是否加载更多
+      if (fetchType) {
+        setPage(page + 1)
+        setList(list.concat(content.content))
+      } else {
+        setPage(0)
+        setList(content.content)
+      }
       stopPullDownRefresh()
     } catch (error) {
       setEmptyType('networkError')
@@ -53,20 +69,19 @@ const usePageLoadingHook = (options: OptionTypes = defaultOptions): ResultOption
   }
   // 加载更多
   const onLoadingMoreHandle = () => {
-    setPage(page + 1)
     setStatus('loading')
-    fetchData()
+    fetchData(true)
   }
 
   // 监听下拉刷新，加载数据
   usePullDownRefresh(() => {
     setPage(1)
-    fetchData()
+    fetchData(false)
   })
 
   // 初始化加载数据
   useEffect(() => {
-    fetchData()
+    fetchData(false)
   }, [])
 
   // 监听数据加载，显示loading
@@ -74,7 +89,7 @@ const usePageLoadingHook = (options: OptionTypes = defaultOptions): ResultOption
     if (loading) {
       showLoading({
         title: '数据加载中...',
-        mask: true
+        mask: true,
       }).then(() => {
         console.log('数据开始加载!')
       })
@@ -99,9 +114,8 @@ const usePageLoadingHook = (options: OptionTypes = defaultOptions): ResultOption
     emptyType,
     isLoadingMore,
     fetchData,
-    onLoadingMoreHandle
+    onLoadingMoreHandle,
   }
-
 }
 
 export default usePageLoadingHook

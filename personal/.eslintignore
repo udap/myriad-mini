@@ -1,0 +1,4 @@
+//.eslintignore 加入要过滤的文件夹和文件
+node_modules
+config
+dist

@@ -1,19 +1,21 @@
-interface Config {
-  noConsole: boolean,
+interface BaseConfigFace {
+  noConsole: boolean
   baseUrl: string
+  appId: string
 }
 
-function getConfig (): Config {
-  let baseUrl = ''
-  let noConsole: boolean
-  if (process.env.NODE_ENV === 'development') {
-    baseUrl = 'http://localhost:3721'
-    noConsole = false
-  } else {
-    baseUrl = 'https://points.xinongtech.com/integ'
-    noConsole = true
-  }
-  return { baseUrl, noConsole }
+const BaseConfig: BaseConfigFace = {
+  noConsole: false,
+  baseUrl: '',
+  appId: 'wx822e3baec6b94400',
 }
 
-export default getConfig
+if (process.env.NODE_ENV === 'development') {
+  BaseConfig.noConsole = false
+  BaseConfig.baseUrl = 'https://points.xinongtech.com/support'
+} else {
+  BaseConfig.baseUrl = 'https://points.xinongtech.com/prod'
+  BaseConfig.noConsole = true
+}
+
+export default BaseConfig

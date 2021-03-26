@@ -2,9 +2,9 @@
   "miniprogramRoot": "dist/",
   "projectname": "personal",
   "description": "江渝生活",
-  "appid": "wxf4aab3a69d357020",
+  "appid": "wx822e3baec6b94400",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
     "enhance": false,
     "postcss": false,

@@ -6,11 +6,14 @@ import IconStruct04 from './struct-icon4.png'
 import DefaultImage from './default-image.png'
 import DefaultImageError from './default-image-error.png'
 
+import Logo from './logo.jpg'
+
 export {
   IconStruct01,
   IconStruct02,
   IconStruct03,
   IconStruct04,
   DefaultImage,
-  DefaultImageError
+  DefaultImageError,
+  Logo,
 }
