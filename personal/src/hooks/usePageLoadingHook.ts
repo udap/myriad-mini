@@ -1,17 +1,18 @@
-import { getUserId } from './../utils/storage'
 import { useEffect, useState } from 'react'
 import {
   showLoading,
   hideLoading,
   usePullDownRefresh,
-  stopPullDownRefresh,
+  stopPullDownRefresh
 } from '@tarojs/taro'
+import { getUserId } from '../utils/storage'
 import { EmptyStatusType } from '../components/Empty'
 import { MoreLoadingStatusType } from '../components/MoreLoading'
 
 interface OptionTypes {
   size?: number
   page?: number
+  data?: any
   fetch: (data?: any) => Promise<{}>
 }
 
@@ -29,7 +30,7 @@ interface ResultOptions {
 }
 
 const defaultOptions: OptionTypes = {
-  fetch: () => new Promise<{}>((resolve) => resolve({})),
+  fetch: () => new Promise<{}>((resolve) => resolve({}))
 }
 
 const usePageLoadingHook = (options = defaultOptions): ResultOptions => {
@@ -46,13 +47,12 @@ const usePageLoadingHook = (options = defaultOptions): ResultOptions => {
   const fetchData = async (fetchType?: boolean) => {
     setLoading(true)
     try {
-      const result: any = await options.fetch({
+      const result: any = await options.fetch(Object.assign({}, {
         page: fetchType ? page + 1 : 0,
         size,
-        orgUid: userId,
-      })
+        orgUid: userId
+      }, options.data))
       const content = result.content
-      setLoading(false)
       setStatus(content.content.length < size ? 'noMore' : 'more')
       // 是否加载更多
       if (fetchType) {
@@ -66,6 +66,7 @@ const usePageLoadingHook = (options = defaultOptions): ResultOptions => {
     } catch (error) {
       setEmptyType('networkError')
     }
+    setLoading(false)
   }
   // 加载更多
   const onLoadingMoreHandle = () => {
@@ -89,9 +90,7 @@ const usePageLoadingHook = (options = defaultOptions): ResultOptions => {
     if (loading) {
       showLoading({
         title: '数据加载中...',
-        mask: true,
-      }).then(() => {
-        console.log('数据开始加载!')
+        mask: true
       })
     } else {
       hideLoading()
@@ -114,7 +113,7 @@ const usePageLoadingHook = (options = defaultOptions): ResultOptions => {
     emptyType,
     isLoadingMore,
     fetchData,
-    onLoadingMoreHandle,
+    onLoadingMoreHandle
   }
 }
 

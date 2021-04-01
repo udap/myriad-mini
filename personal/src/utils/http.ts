@@ -53,9 +53,10 @@ function http(options: OptionsType = { method: 'GET', data: {} }) {
       } else if (statusCode === 401) {
         // 重新授权
         if (token) {
+          // 延迟3秒 重新授权
           timer = setTimeout(() => {
             refreshToken()
-          }, 1000)
+          }, 3000)
         } else {
           showModal({
             title: '提示',

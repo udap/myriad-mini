@@ -3,7 +3,7 @@ import {
   getUpdateManager,
   showModal,
   getSetting,
-  getUserInfo,
+  getUserInfo
 } from '@tarojs/taro'
 import { Provider } from 'react-redux'
 import configStore from './store'
@@ -41,7 +41,7 @@ const App: React.FC = (props) => {
                 // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
                 getUpdateManager().applyUpdate()
               }
-            },
+            }
           })
         })
 
@@ -50,7 +50,7 @@ const App: React.FC = (props) => {
           showModal({
             title: '提示',
             content: '检查到有新版本，但下载失败，请检查网络设置',
-            showCancel: false,
+            showCancel: false
           })
         })
       }

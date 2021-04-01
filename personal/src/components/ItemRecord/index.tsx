@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text } from '@tarojs/components'
 import LazyImage from '../LazyImage'
 
+import './index.less'
+
 interface ItemRecordProps {
   title: string,
   num: number,

@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react'
 import { View } from '@tarojs/components'
 import classNames from 'classnames'
+
 import './index.less'
 
 export interface DirectionType {
@@ -46,7 +47,8 @@ export interface FlexProps extends ComponentProps<any> {
   wrap?: keyof WrapType,
   justify?: keyof JustifyType,
   align?: keyof AlignType,
-  alignContent?: keyof AlignContentType
+  alignContent?: keyof AlignContentType,
+  className?: string
 }
 
 class Flex extends React.Component<FlexProps> {
@@ -64,8 +66,9 @@ class Flex extends React.Component<FlexProps> {
   }
 
   render () {
-    const { direction, wrap, justify, align, alignContent, children, ...restProps } = this.props
+    const { direction, wrap, justify, align, alignContent, children, className, ...restProps } = this.props
     const baseClass = classNames(
+      className,
       'flex',
       `direction-${direction}`,
       `wrap-${wrap}`,
